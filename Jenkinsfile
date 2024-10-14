@@ -1,22 +1,21 @@
 pipeline {
     agent any
 	
-	  tools
-    {
-       maven "Maven"
-    }
+ environment{
+        PATH = "/opt/apache-maven-3.9.9/bin:$PATH"
+	 
  stages {
       stage('checkout') {
            steps {
              
-                git branch: 'master', url: 'https://github.com/devops4solutions/CI-CD-using-Docker.git'
+                git credentialsId: 'Password', url: 'https://github.com/Nagesh05021993/hello-world-tomcat-war.git'
              
           }
         }
 	 stage('Execute Maven') {
            steps {
              
-                sh 'mvn package'             
+                sh 'mvn  clean package'             
           }
         }
         
@@ -31,7 +30,7 @@ pipeline {
           }
         }
      
-  stage('Publish image to Docker Hub') {
+  /*stage('Publish image to Docker Hub') {
           
             steps {
         withDockerRegistry([ credentialsId: "dockerHub", url: "" ]) {
@@ -56,7 +55,7 @@ pipeline {
                 sh "docker -H ssh://jenkins@172.31.28.25 run -d -p 8003:8080 nikhilnidhi/samplewebapp"
  
             }
-        }
+        }*/
     }
 	}
     
