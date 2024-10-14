@@ -19,7 +19,21 @@ pipeline {
                 sh 'mvn  clean package'             
           }
         }   
- 
+ stage("Deploy"){
+            steps{
+                    sshagent(['SSH_Tomcat']) {
+                                        
+                        sh """
+                            scp -o StrictHostKeyChecking=no /var/lib/jenkins/workspace/example-tomcat-war/target/SimpleTomcatWebApp.war ec2-user@172.31.45.90:/opt/tomcat9/webapps/
+                    
+                            ssh ec2-user@172.31.45.90 /opt/tomcat9/bin/shutdown.sh
+                    
+                            ssh ec2-user@172.31.45.90 /opt/tomcat9/bin/startup.sh
+                
+                """
+                }
+            }
+      }
     }
 	}
     
